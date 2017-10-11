@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dojo Message Board</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0 auto;
+            text-align: center;
+        }
+        form {
+            /* border: 2px solid black; */
+            display: block;
+            width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+            cursor: default;
+            font-size: 16px;
+        }
+        .main-post {
+            border: 1px solid red; 
+            width: 800px;
+            margin: 20px auto;
+            text-align: left;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Dojo Message Board</h1>
+    <hr>
+    <form action="/messages" method="post">
+        <label for="">Name:</label>
+        <input type="text" placeholder="Enter name" name="name">
+        <label for="">Message:</label>
+        <textarea name="text" id="" cols="30" rows="5"></textarea>
+        <input type="submit" value="Post Message">
+        <!-- <button><a href="/">See the Animals!</a></button> -->
+    </form>
+
+    <!-- Validation -->
+    <% if(typeof(errors) != 'undefined' ) { %>
+        <% for (var x in errors) { %>
+            <h3><%= errors[x].message %></h3>
+        <% } %>
+    <% } %>
+
+    <!-- Displaying all the messages -->
+    <h2>Here are all the messages!</h2>
+    <% for(i in messageBank) { %>
+        <div class="main-post">
+            <div class="message-body">
+                <h3>Name: "<%= messageBank[i].name %>"</h3>
+                <h3>Message: <%= messageBank[i].text %></h3>
+                <p>Time added at: <%= messageBank[i].createdAt.toUTCString() %></p>
+            </div>
+            <div class="comment-body">
+                <!-- Loop to display comments -->
+                <% for(j of messageBank[i]._comments) { %>
+                    <div class="comment-section">
+                        <p>Name: <%= j.name %></p>
+                        <p>Comment: <%= j.text %></p> 
+
+                        
+                    </div>
+                <% } %>
+                <form action="/comments/<%= messageBank[i]._id %>" method="post">
+                    <label for="">Name:</label>
+                    <input type="text" placeholder="Enter name" name="name">
+                    <label for="">Message:</label>
+                    <textarea name="text" id="" cols="30" rows="5"></textarea>
+                    <input type="submit" value="Post Message">
+                    <!-- <button><a href="/">See the Animals!</a></button> -->
+                </form>
+            </div>
+        </div>
+    <% } %>
+</body>
+</html>
